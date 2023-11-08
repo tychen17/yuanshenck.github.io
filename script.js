@@ -3,7 +3,7 @@ function calculate() {
     var crystals = parseInt(document.getElementById('crystals').value) || 0;
     var primogems = parseInt(document.getElementById('primogems').value) || 0;
     var paddedPulls = parseInt(document.getElementById('padded-pulls').value) || 0; // 垫的抽数
-    var existingPulls = parseInt(document.getElementById('existing-pulls').value) || 0; // 已有抽数
+    var existingPulls = parseInt(document.getElementById('existing-pulls').value) || 0; // 已有抽数（已经用原石换成的抽数）
     var desiredConstellations = parseInt(document.getElementById('desired-constellations').value) || 0;
     var expectedPulls = parseInt(document.getElementById('expected-pulls').value) || 0;
 
@@ -12,20 +12,21 @@ function calculate() {
     const primogemsPerPull = 160; // 每次抽卡所需的原石数
 
     // 计算当前原石可以抽卡的次数
-    var totalPullsAvailable = Math.floor(primogems / primogemsPerPull) + Math.floor(crystals / primogemsPerPull) + paddedPulls;
+    var totalPrimogems = primogems + (crystals * 160); // 结晶转换为原石
+    var totalPullsAvailable = Math.floor(totalPrimogems / primogemsPerPull) + existingPulls;
 
     // 计算可以实现的命座数量或期望抽数
-    var targetPulls = (desiredConstellations * pullsPerConstellation) + paddedPulls || expectedPulls;
+    var targetPulls = desiredConstellations * pullsPerConstellation + paddedPulls || expectedPulls;
     var pullsNeeded = targetPulls - totalPullsAvailable;
 
     // 如果需要的抽数小于0，说明不需要充值
-    if (pullsNeeded < 0) {
+    if (pullsNeeded <= 0) {
         pullsNeeded = 0;
     }
 
     // 计算需要的原石和结晶
     var primogemsNeeded = pullsNeeded * primogemsPerPull;
-    var crystalsNeeded = Math.ceil(primogemsNeeded - primogems);
+    var crystalsNeeded = Math.ceil((primogemsNeeded - primogems) / 160); // 结晶转换为原石
 
     // 充值档次对应的结晶数量
     const rechargeTiers = {
@@ -41,7 +42,7 @@ function calculate() {
     let bestRechargeSolution = {};
     let remainingCrystals = crystalsNeeded;
     Object.keys(rechargeTiers).sort((a, b) => b - a).forEach(tier => {
-        if (remainingCrystals >= rechargeTiers[tier]) {
+        if (remainingCrystals > 0) {
             bestRechargeSolution[tier] = Math.floor(remainingCrystals / rechargeTiers[tier]);
             remainingCrystals -= bestRechargeSolution[tier] * rechargeTiers[tier];
         }
@@ -55,7 +56,7 @@ function calculate() {
     // 输出结果
     var resultString = `目前能抽出的命座数: ${Math.floor((totalPullsAvailable - paddedPulls) / pullsPerConstellation)}<br>`;
     resultString += `总共可抽次数: ${totalPullsAvailable}<br>`;
-    resultString += `还需充值结晶: ${crystalsNeeded}<br>`;
+    resultString += `还需充值结晶: ${crystalsNeeded > 0 ? crystalsNeeded : 0}<br>`;
     resultString += '充值方案: <br>';
 
     Object.keys(bestRechargeSolution).forEach(tier => {
