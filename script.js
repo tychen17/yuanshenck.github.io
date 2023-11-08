@@ -2,8 +2,8 @@ function calculate() {
     // 获取用户输入的值
     var crystals = parseInt(document.getElementById('crystals').value) || 0;
     var primogems = parseInt(document.getElementById('primogems').value) || 0;
-    var paddedPulls = parseInt(document.getElementById('padded-pulls').value) || 0; // 垫的抽数
-    var existingPulls = parseInt(document.getElementById('existing-pulls').value) || 0; // 已有抽数（已经用原石换成的抽数）
+    var paddedPulls = parseInt(document.getElementById('padded-pulls').value) || 0;
+    var existingPulls = parseInt(document.getElementById('existing-pulls').value) || 0;
     var desiredConstellations = parseInt(document.getElementById('desired-constellations').value) || 0;
     var expectedPulls = parseInt(document.getElementById('expected-pulls').value) || 0;
 
@@ -15,8 +15,8 @@ function calculate() {
     var totalPrimogems = primogems + (crystals * 160); // 结晶转换为原石
     var totalPullsAvailable = Math.floor(totalPrimogems / primogemsPerPull) + existingPulls;
 
-    // 计算可以实现的命座数量或期望抽数
-    var targetPulls = desiredConstellations * pullsPerConstellation + paddedPulls || expectedPulls;
+    // 确定目标抽数
+    var targetPulls = expectedPulls > 0 ? expectedPulls : desiredConstellations * pullsPerConstellation;
     var pullsNeeded = targetPulls - totalPullsAvailable;
 
     // 如果需要的抽数小于0，说明不需要充值
@@ -57,13 +57,18 @@ function calculate() {
     var resultString = `目前能抽出的命座数: ${Math.floor((totalPullsAvailable - paddedPulls) / pullsPerConstellation)}<br>`;
     resultString += `总共可抽次数: ${totalPullsAvailable}<br>`;
     resultString += `还需充值结晶: ${crystalsNeeded > 0 ? crystalsNeeded : 0}<br>`;
-    resultString += '充值方案: <br>';
 
-    Object.keys(bestRechargeSolution).forEach(tier => {
-        if (bestRechargeSolution[tier] > 0) {
-            resultString += `${tier}元档次 x ${bestRechargeSolution[tier]}<br>`;
-        }
-    });
+    // 只有当需要充值时才显示充值方案
+    if (crystalsNeeded > 0) {
+        resultString += '充值方案: <br>';
+        Object.keys(bestRechargeSolution).forEach(tier => {
+            if (bestRechargeSolution[tier] > 0) {
+                resultString += `${tier}元档次 x ${bestRechargeSolution[tier]}<br>`;
+            }
+        });
+    } else {
+        resultString += '无需额外充值<br>';
+    }
 
     document.getElementById('output').innerHTML = resultString;
 }
