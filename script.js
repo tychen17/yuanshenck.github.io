@@ -2,8 +2,8 @@ function calculate() {
     // 获取用户输入的值
     var crystals = parseInt(document.getElementById('crystals').value) || 0;
     var primogems = parseInt(document.getElementById('primogems').value) || 0;
-    var paddedPulls = parseInt(document.getElementById('padded-pulls').value) || 0;
-    var existingPulls = parseInt(document.getElementById('existing-pulls').value) || 0;
+    var paddedPulls = parseInt(document.getElementById('padded-pulls').value) || 0; // 垫的抽数
+    var existingPulls = parseInt(document.getElementById('existing-pulls').value) || 0; // 已有抽数
     var desiredConstellations = parseInt(document.getElementById('desired-constellations').value) || 0;
     var expectedPulls = parseInt(document.getElementById('expected-pulls').value) || 0;
 
@@ -12,11 +12,11 @@ function calculate() {
     const primogemsPerPull = 160; // 每次抽卡所需的原石数
 
     // 计算当前原石可以抽卡的次数
-    var totalPullsAvailable = Math.floor(primogems / primogemsPerPull) + Math.floor(crystals / primogemsPerPull) + existingPulls;
+    var totalPullsAvailable = Math.floor(primogems / primogemsPerPull) + Math.floor(crystals / primogemsPerPull) + paddedPulls;
 
     // 计算可以实现的命座数量或期望抽数
-    var targetPulls = desiredConstellations * pullsPerConstellation || expectedPulls;
-    var pullsNeeded = targetPulls - totalPullsAvailable + paddedPulls;
+    var targetPulls = (desiredConstellations * pullsPerConstellation) + paddedPulls || expectedPulls;
+    var pullsNeeded = targetPulls - totalPullsAvailable;
 
     // 如果需要的抽数小于0，说明不需要充值
     if (pullsNeeded < 0) {
@@ -53,7 +53,7 @@ function calculate() {
     }
 
     // 输出结果
-    var resultString = `目前能抽出的命座数: ${Math.floor(totalPullsAvailable / pullsPerConstellation)}<br>`;
+    var resultString = `目前能抽出的命座数: ${Math.floor((totalPullsAvailable - paddedPulls) / pullsPerConstellation)}<br>`;
     resultString += `总共可抽次数: ${totalPullsAvailable}<br>`;
     resultString += `还需充值结晶: ${crystalsNeeded}<br>`;
     resultString += '充值方案: <br>';
