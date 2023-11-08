@@ -48,7 +48,34 @@ function calculate() {
         60: 6
     };
 
-    // 其余的代码将根据这些新的输入和常量进行相同的逻辑处理……
-    // 确定最优充值档次，更新结果显示等
+    // 最优充值方案
+    let bestRechargeSolution = {};
+    if (rechargeNeeded) {
+        // 根据需要充值的金额，找出最优解
+        let remainingRechargeAmount = rechargeAmount;
+        for (let [crystals, price] of Object.entries(rechargeTiers).sort((a, b) => b[1] - a[1])) {
+            let tierCount = Math.floor(remainingRechargeAmount / crystals);
+            if (tierCount > 0) {
+                bestRechargeSolution[price] = tierCount;
+                remainingRechargeAmount -= tierCount * crystals;
+            }
+            if (remainingRechargeAmount <= 0) break;
+        }
+    }
+
+    // 添加充值方案到结果字符串
+    if (Object.keys(bestRechargeSolution).length > 0) {
+        resultString += "\n最优充值档次选择:\n";
+        for (let [price, count] of Object.entries(bestRechargeSolution)) {
+            resultString += `${price}元档次 x ${count}\n`;
+        }
+    }
+
+    // 显示结果
+    document.getElementById('output').textContent = resultString;
 }
-// 请继续使用上面的逻辑来计算最优充值档次，并将结果显示在页面上。
+
+// 确保DOM加载后再绑定事件
+document.addEventListener('DOMContentLoaded', function () {
+    // 可以在这里进一步初始化或者绑定事件
+});
