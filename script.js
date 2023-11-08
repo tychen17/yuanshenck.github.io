@@ -2,8 +2,8 @@ function calculate() {
     // 获取用户输入的值
     var crystals = parseInt(document.getElementById('crystals').value) || 0;
     var primogems = parseInt(document.getElementById('primogems').value) || 0;
-    var paddedPulls = parseInt(document.getElementById('padded-pulls').value) || 0;
-    var existingPulls = parseInt(document.getElementById('existing-pulls').value) || 0;
+    var paddedPulls = parseInt(document.getElementById('padded-pulls').value) || 0; // 玩家已经投入到卡池的抽数
+    var existingPulls = parseInt(document.getElementById('existing-pulls').value) || 0; // 已有抽数（已经用原石换成的抽数）
     var desiredConstellations = parseInt(document.getElementById('desired-constellations').value) || 0;
     var expectedPulls = parseInt(document.getElementById('expected-pulls').value) || 0;
 
@@ -16,7 +16,7 @@ function calculate() {
     var totalPullsAvailable = Math.floor(totalPrimogems / primogemsPerPull) + existingPulls;
 
     // 确定目标抽数
-    var targetPulls = expectedPulls > 0 ? expectedPulls : desiredConstellations * pullsPerConstellation;
+    var targetPulls = expectedPulls > 0 ? expectedPulls : desiredConstellations * pullsPerConstellation + paddedPulls;
     var pullsNeeded = targetPulls - totalPullsAvailable;
 
     // 如果需要的抽数小于0，说明不需要充值
