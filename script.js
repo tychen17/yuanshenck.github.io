@@ -88,10 +88,10 @@ function calculate() {
  
      // 显示结果
      document.getElementById('output').textContent = resultString;
- }
+    }
  
  // 确保DOM加载后再绑定事件
  document.addEventListener('DOMContentLoaded', function () {
-     // 可以在这里进一步初始化或者绑定事件
- });
+    // 这里可以继续添加其他的初始化代码或事件绑定
+});
  
