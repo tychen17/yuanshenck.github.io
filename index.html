@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>原神抽卡规划工具</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>原神抽卡规划工具</h1>
+    <div id="input-form">
+        <label>结晶数量：<input type="number" id="crystals" value="0"></label>
+        <label>原石数量：<input type="number" id="primogems" value="0"></label>
+        <label>垫的抽数：<input type="number" id="padded-pulls" value="0"></label>
+        <label>已有抽数：<input type="number" id="existing-pulls" value="0"></label>
+        <label>需要命座：<input type="number" id="desired-constellations" value="0"></label>
+        <button onclick="calculate()">计算</button>
+    </div>
+    <div id="output">
+        <!-- 结果将在这里显示 -->
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
